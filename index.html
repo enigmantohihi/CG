@@ -86,10 +86,10 @@
     var coneMaterial1 = new THREE.MeshPhongMaterial({ color: 0x3dff6e });
     var coneMaterial2 = new THREE.MeshPhongMaterial({ color: 0x3dff6e, wireframe:true });
     var cone1 = new THREE.Mesh(coneGeometry, coneMaterial1);
-    cone1.position.set(-2, -0.25, 0); //位置を指定
+    cone1.position.set(-2, -0.25, 1); //位置を指定
     scene.add(cone1);   // シーンに追加
     var cone2 = new THREE.Mesh(coneGeometry, coneMaterial2);
-    cone2.position.set(2, 0.25, 0); //位置を指定
+    cone2.position.set(2, 0.25, 1); //位置を指定
     scene.add(cone2);   // シーンに追加
     
     // くねくね
@@ -98,6 +98,25 @@
     var torusKnot = new THREE.Mesh(torusKnotGeometry, torusKnotMaterial);
     torusKnot.position.set(0, -0.5, -1);
     scene.add(torusKnot);
+
+    //角柱
+    var cylinderGeometry = new THREE.CylinderGeometry(0.9, 0.2, 2, 5);
+    var cylinderGeometry2 = new THREE.CylinderGeometry(0.2, 0.9, 2, 5);
+    var cylinderMaterial = new THREE.MeshLambertMaterial({ color: 0xffe063 });
+    var cylinder1 = new THREE.Mesh(cylinderGeometry2, cylinderMaterial);
+    cylinder1.position.set(0, -1.5, 0);
+    scene.add(cylinder1);
+    var cylinder2 = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+    cylinder2.position.set(0, 1.5, 0);
+    scene.add(cylinder2);
+    var cylinder3 = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+    cylinder3.position.set(-2, 0, 0);
+    cylinder3.rotation.set(-90, 0, 90);
+    scene.add(cylinder3);
+    var cylinder4 = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+    cylinder4.position.set(2, 0, 0);
+    cylinder4.rotation.set(-90, 0, -90);
+    scene.add(cylinder4);
   
     // 初回実行
     var update = function() {
