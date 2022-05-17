@@ -24,20 +24,21 @@
   
     // シーンを作成
     var scene = new THREE.Scene();
+    //scene.background = new THREE.Color(0x404040);
 
     // カメラを作成
     var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-    camera.position.set(1, 1, 5);  //位置を指定
+    camera.position.set(0, 1, 5);  //位置を指定
     camera.lookAt(0, 0, 0); //見つめる方向
 
     
     // 平行光源
     var directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.position.set(5, 1, 1);   //位置を指定
+    directionalLight.position.set(5, 1, 4);   //位置を指定
     scene.add(directionalLight);     // シーンに追加
     // 平行光源
     var directionalLight2 = new THREE.DirectionalLight(0xffffff);
-    directionalLight2.position.set(-5, 1, 1);   //位置を指定
+    directionalLight2.position.set(-5, 1, -4);   //位置を指定
     scene.add(directionalLight2);     // シーンに追加
       
     // helper
@@ -47,28 +48,74 @@
     scene.add(axisHelper);
 
     // 箱を作成
-    var geometry = new THREE.BoxGeometry(1, 1, 1);
-    var material = new THREE.MeshPhongMaterial({ color: 0x0000ff });
-    var box = new THREE.Mesh(geometry, material);
-    box.position.set(1,0,0); //位置を指定
-    scene.add(box);   // シーンに追加
+    var boxGeometry1 = new THREE.BoxGeometry(1, 1, 1);
+    var boxGeometry2 = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+    var boxMaterial1 = new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: true});
+    var boxMaterial2 = new THREE.MeshPhongMaterial({ color: 0x000000, wireframe: false });
+    var box1 = new THREE.Mesh(boxGeometry1, boxMaterial1);
+    var box2 = new THREE.Mesh(boxGeometry2, boxMaterial2);
+    box1.position.set(0,0,0); //位置を指定
+    scene.add(box1);   // シーンに追加
+    box2.position.set(0, 0, 0); //位置を指定
+    scene.add(box2);   // シーンに追加
+
+    // 球を作成
+    var sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32); 
+    var sphereMaterial = new THREE.MeshPhongMaterial({ color: 0xff4942, wireframe: true });
+    var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.position.set(0, 0, 0);
+    scene.add(sphere);
+
+    //ドーナツ
+    var torusGeometry = new THREE.TorusGeometry(0.5, 0.1, 6, 12);
+    var torusMaterial1 = new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe:true });
+    var torusMaterial2 = new THREE.MeshPhongMaterial({ color: 0x0000ff, wireframe:true });
+    for(let i=0;i<9;i++){
+      let pos_y = 2.5 - i;
+      for (let j = 0; j < 12; j++) {
+        var flag = (i%2==0)? j%2==0 : j%2==1;
+        var torusMaterial = (flag) ? torusMaterial1 : torusMaterial2;
+        var torus = new THREE.Mesh(torusGeometry, torusMaterial);
+        torus.position.set(-5.5 + j, pos_y, -5);
+        scene.add(torus);
+      }
+    }
 
     // 角錐を作成
-    var coneGeometry = new THREE.ConeGeometry(1, 1);
-    var coneMaterial = new THREE.MeshPhongMaterial({ color: 0x0000ff });
-    var cone = new THREE.Mesh(coneGeometry, coneMaterial);
-    cone.position.set(-1, 0, 0); //位置を指定
-    scene.add(cone);   // シーンに追加
+    var coneGeometry = new THREE.ConeGeometry(0.2, 1);
+    var coneMaterial1 = new THREE.MeshPhongMaterial({ color: 0x3dff6e });
+    var coneMaterial2 = new THREE.MeshPhongMaterial({ color: 0x3dff6e, wireframe:true });
+    var cone1 = new THREE.Mesh(coneGeometry, coneMaterial1);
+    cone1.position.set(-2, -0.25, 0); //位置を指定
+    scene.add(cone1);   // シーンに追加
+    var cone2 = new THREE.Mesh(coneGeometry, coneMaterial2);
+    cone2.position.set(2, 0.25, 0); //位置を指定
+    scene.add(cone2);   // シーンに追加
+    
+    // くねくね
+    var torusKnotGeometry = new THREE.TorusKnotGeometry(1.5, 0.1, 20, 6, 3, 2); 
+    var torusKnotMaterial = new THREE.MeshPhongMaterial({ color: 0x5fcfa2, wireframe: false });
+    var torusKnot = new THREE.Mesh(torusKnotGeometry, torusKnotMaterial);
+    torusKnot.position.set(0, -0.5, -1);
+    scene.add(torusKnot);
   
     // 初回実行
     var update = function() {
       requestAnimationFrame(update);
   
       // 箱を回転させる
-      box.rotation.x += 0.01;
-      box.rotation.y += 0.01;
-      cone.rotation.x += 0.01;
-      cone.rotation.y += 0.01;
+      box1.rotation.x += 0.01;
+      box1.rotation.y += 0.01;
+      box2.rotation.x -= 0.01;
+      box2.rotation.y -= 0.01;
+
+      sphere.rotation.y += 0.01;
+      
+      cone1.rotation.x -= 0.01;
+      cone1.rotation.y -= 0.05;
+      cone2.rotation.x -= 0.01;
+      cone2.rotation.y += 0.05;
+      
   
       renderer.render(scene, camera);
     };
