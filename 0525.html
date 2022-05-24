@@ -1,0 +1,242 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+ <script>
+      // ページの読み込みを待つ
+      window.addEventListener('DOMContentLoaded', init);
+
+      function init() {
+        // サイズを指定
+        const width = 800
+        const height = 600;
+
+        // レンダラーを作成
+        var renderer = new THREE.WebGLRenderer();
+        document.body.appendChild(renderer.domElement);
+        renderer.setSize(width, height);
+        // レンダラー：シャドウを有効にする
+        renderer.shadowMap.enabled = true;
+
+        // シーンを作成
+        const scene = new THREE.Scene();
+
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, width / height);
+        // カメラの初期座標を設定
+        camera.position.set(0, 0, 5);
+
+        // カメラコントローラーを作成
+        const controls = new THREE.OrbitControls(camera, document.body); 
+        
+        //光源
+        var directionalLight1 = new THREE.DirectionalLight(0x888888);
+        directionalLight1.position.set(-10, -1, 5);
+        directionalLight1.castShadow = true;
+        scene.add(directionalLight1);
+        // 平行光源(色、強さ）主光源
+        var directionalLightM = new THREE.DirectionalLight(0xffffff,1.0);
+        directionalLightM.position.set(0, 10, 5);
+        directionalLightM.castShadow = true; 
+        //シーンに追加
+        scene.add(directionalLightM);
+
+        // helper
+        const gridHelper = new THREE.GridHelper(2,10); // size, step
+        //scene.add(gridHelper);
+        const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
+        //scene.add(axisHelper);
+
+        // 平面を作成
+        var planeGeometry = new THREE.PlaneGeometry(5,5,10,10); //縦、横、分割数、分割数
+        var planeMaterial = new THREE.MeshPhongMaterial({color: 0xf0f8ff});
+        var plane = new THREE.Mesh(planeGeometry,planeMaterial);
+        plane.receiveShadow = true;
+        plane.rotation.set( -Math.PI/2, 0, 0 );
+        plane.position.set(0,-2,0);
+        scene.add(plane);
+
+        const root = new THREE.Group();
+        //box
+        const box_Width = 0.4;
+        const box_x = 0;
+        var geometry = new THREE.BoxGeometry(box_Width, 0.4, 0.4);
+        var material = new THREE.MeshStandardMaterial({ color: 0xffa500 });
+        var box = new THREE.Mesh(geometry, material);
+        box.castShadow = true;
+        box.position.set(box_x,0,0);
+        root.add(box);
+        //box_mark
+        var boxMark_G = new THREE.PlaneGeometry(0.4,0.2,10,10); //縦、横、分割数、分割数
+        var boxMark_M = new THREE.MeshPhongMaterial({color: 0xffff00});
+        var boxMarkA = new THREE.Mesh(boxMark_G,boxMark_M);
+        boxMarkA.rotation.set( -Math.PI/2, 0, 0 );
+        boxMarkA.position.set(0,0.201,0);
+        root.add(boxMarkA);
+        var boxMarkB = new THREE.Mesh(boxMark_G,boxMark_M);
+        boxMarkB.rotation.set( Math.PI/2, Math.PI/2, 0);
+        boxMarkB.position.set(0.201,0,0);
+        root.add(boxMarkB);
+        var boxMarkC = new THREE.Mesh(boxMark_G,boxMark_M);
+        boxMarkC.rotation.set( Math.PI/2, -Math.PI/2, 0);
+        boxMarkC.position.set(-0.201,0,0);
+        root.add(boxMarkC);
+
+        const parent_wingR = new THREE.Group();
+        const parent_wingL = new THREE.Group();
+        //tukene
+        const cylinder_length = 0.15;
+        const cylinder_x = box_x + box_Width / 2 + cylinder_length / 2;
+        var cylinder_G = new THREE.CylinderGeometry( 0.02, 0.02, cylinder_length, 16 );
+        var cylinder_M = new THREE.MeshStandardMaterial( {color: 0x4169e1} );
+        var cylinder_R = new THREE.Mesh( cylinder_G, cylinder_M );
+        cylinder_R.castShadow = true;
+        cylinder_R.position.set( cylinder_x, 0, 0);
+        cylinder_R.rotation.z = Math.PI/2;
+        parent_wingR.add(cylinder_R);
+        var cylinder_L = new THREE.Mesh( cylinder_G, cylinder_M );
+        cylinder_L.castShadow = true;
+        cylinder_L.position.set( -cylinder_x, 0, 0);
+        cylinder_L.rotation.z = -Math.PI/2;
+        parent_wingL.add(cylinder_L);
+
+        //wing
+        const wing_length = 0.6;
+        const wing_thick = 0.05;
+        const wing_x = cylinder_x + cylinder_length/2 + wing_length/2;
+        var wing_G = new THREE.BoxGeometry(wing_length, wing_thick, 0.3);
+        var wing_M = new THREE.MeshStandardMaterial({ color: 0x4169e1});
+        var wing_R = new THREE.Mesh(wing_G, wing_M);
+        wing_R.castShadow = true;
+        wing_R.position.set(wing_x,0,0);
+        parent_wingR.add(wing_R);
+        var wing_L = new THREE.Mesh(wing_G, wing_M);
+        wing_L.castShadow = true;
+        wing_L.position.set(-wing_x,0,0);
+        parent_wingL.add(wing_L);
+
+        //wing_panel
+        const wingPanel_y = wing_thick/2 + 0.01;
+        var wingPanel_G = new THREE.PlaneGeometry(wing_length-0.1,0.25,10,10); //縦、横、分割数、分割数
+        var wingPanel_M = new THREE.MeshPhongMaterial({color: 0x191970});
+        var wingPanelA_R = new THREE.Mesh(wingPanel_G,wingPanel_M);
+        wingPanelA_R.rotation.set( -Math.PI/2, 0, 0 );
+        wingPanelA_R.position.set(wing_x,wingPanel_y,0);
+        parent_wingR.add(wingPanelA_R);
+        var wingPanelB_R = new THREE.Mesh(wingPanel_G,wingPanel_M);
+        wingPanelB_R.rotation.set( Math.PI/2, 0, 0 );
+        wingPanelB_R.position.set(wing_x,-wingPanel_y,0);
+        parent_wingR.add(wingPanelB_R);
+        var wingPanelA_L = new THREE.Mesh(wingPanel_G,wingPanel_M);
+        wingPanelA_L.rotation.set( -Math.PI/2, 0, 0 );
+        wingPanelA_L.position.set(-wing_x,wingPanel_y,0);
+        parent_wingL.add(wingPanelA_L);
+        var wingPanelB_L = new THREE.Mesh(wingPanel_G,wingPanel_M);
+        wingPanelB_L.rotation.set( Math.PI/2, 0, 0 );
+        wingPanelB_L.position.set(-wing_x,-wingPanel_y,0);
+        parent_wingL.add(wingPanelB_L);
+
+        //antenna
+        var antenna_G = new THREE.SphereGeometry(0.26,8,8,0,Math.PI*2,0, 1.2);
+        var antenna_M = new THREE.MeshStandardMaterial({ color: 0xf5f5f5,  wireframe: false});
+        var antenna = new THREE.Mesh(antenna_G, antenna_M);
+        antenna.castShadow = true;
+        antenna.position.set(0,-0.46,0);
+        root.add(antenna);
+        var antenna2_G = new THREE.BoxGeometry(0.02, 0.2, 0.02);
+        var antenna2_M = new THREE.MeshStandardMaterial({ color: 0x696969});
+        var antenna2A = new THREE.Mesh(antenna2_G, antenna2_M);
+        antenna2A.castShadow = true;
+        antenna2A.position.set(-0.05,-0.3,0);
+        antenna2A.rotation.set(0,0,Math.PI/9);
+        root.add(antenna2A);
+        var antenna2B = new THREE.Mesh(antenna2_G, antenna2_M);
+        antenna2B.castShadow = true;
+        antenna2B.position.set(0.03,-0.3,0.025);
+        antenna2B.rotation.set(Math.PI/9,0,-Math.PI/9);
+        root.add(antenna2B);
+        var antenna2C = new THREE.Mesh(antenna2_G, antenna2_M);
+        antenna2C.castShadow = true;
+        antenna2C.position.set(0.03,-0.3,-0.03);
+        antenna2C.rotation.set(-Math.PI/9,0,-Math.PI/9);
+        root.add(antenna2C);
+        var antennaBall_G = new THREE.SphereGeometry(0.025,8,8);
+        var antennaBall_M = new THREE.MeshStandardMaterial({ color: 0xf5f5f5});
+        var antennaBall = new THREE.Mesh(antennaBall_G, antennaBall_M);
+        antennaBall.castShadow = true;
+        antennaBall.position.set(0,-0.4,0);
+        root.add(antennaBall);
+
+        //engine
+        var engine_G = new THREE.CylinderGeometry( 0.05, 0.1, 0.08, 8 );
+        var engine_M = new THREE.MeshPhongMaterial( {color: 0x696969} );
+        
+        //center
+        const earth = new THREE.Group();
+        var center_G = new THREE.SphereGeometry(0.2,8,8);
+        var center_M = new THREE.MeshStandardMaterial({ color: 0x4169e1});
+        var center = new THREE.Mesh(center_G, center_M);
+        center.castShadow = true;
+        center.receiveShadow = true;
+        center.position.set(0,0,0);
+        earth.add(center);
+        var centerA_G = new THREE.SphereGeometry(0.2,8,8,0,Math.PI*2,0, 1.0);
+        var centerA_M = new THREE.MeshStandardMaterial({ color: 0x008000});
+        var centerA = new THREE.Mesh(centerA_G, centerA_M);
+        centerA.castShadow = true;
+        centerA.receiveShadow = true;
+        centerA.position.set(0,0,0);
+        centerA.rotation.set(0,0,Math.PI/4);
+        earth.add(centerA);
+        var centerB_G = new THREE.SphereGeometry(0.2,8,8,0,Math.PI*2,0, 0.9);
+        var centerB_M = new THREE.MeshStandardMaterial({ color: 0x008000});
+        var centerB = new THREE.Mesh(centerB_G, centerB_M);
+        centerB.castShadow = true;
+        centerB.receiveShadow = true;
+        centerB.position.set(0,0,0);
+        centerB.rotation.set(0,0,-Math.PI/1.5);
+        earth.add(centerB);
+
+        scene.add(earth);
+
+        for(let i=0;i<3;i++){    
+          var engine = new THREE.Mesh( engine_G, engine_M );
+          if(i==0) engine.position.set( -0.1, 0.224, 0.1);
+          else if(i==1) engine.position.set( 0, 0.224, -0.1);
+          else engine.position.set( 0.1, 0.224, 0.1);
+         
+          engine.rotation.set(Math.PI,0,0);
+          root.add( engine );
+        }
+
+        root.add(parent_wingR);
+        root.add(parent_wingL);
+        scene.add(root); 
+
+        let t = 0;
+        root.rotation.set(Math.PI/9,0,Math.PI/2);
+        update();
+        
+        // 毎フレーム時に実行されるループイベントです
+        function update() {
+          // レンダリング
+          renderer.render(scene, camera);
+          requestAnimationFrame(update);
+          earth.rotation.y += 0.01;
+
+          parent_wingR.rotation.x += 0.02;
+          parent_wingL.rotation.x += 0.02;
+          root.rotation.z -= 0.0025;
+          t += 0.0025;
+          let x = -1*Math.cos(t);
+          let y = 1*Math.sin(t);
+          root.position.set(x,y,0);
+          
+        }
+      }
+    </script>
+</body>
+</html>
