@@ -1,10 +1,17 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <title>人工衛星と地球</title>
   <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
+  <h1>人工衛星と地球</h1>
+  <p>
+    グループ化を使用して人工衛星を作成した。人工衛星本体と左右の翼はそれぞれ別にグループ化している。<br>
+    そのため本体は地球の周りを公転しているが、翼は別で回転している。<br>
+    円軌道はsin関数とcos関数を使用して実装した。
+  </p>
  <script>
       // ページの読み込みを待つ
       window.addEventListener('DOMContentLoaded', init);
