@@ -29,7 +29,7 @@
         // カメラを作成
         const camera = new THREE.PerspectiveCamera(45, width / height);
         // カメラの初期座標を設定
-        camera.position.set(0, 0, 5);
+        camera.position.set(0, 0, 2);
 
         // カメラコントローラーを作成
         const controls = new THREE.OrbitControls(camera, document.body); 
@@ -62,7 +62,7 @@
 
          // 玉をスプライトで作成
          var textureLoader2 = new THREE.TextureLoader();  
-        var texture2 = textureLoader2.load("img/tama.png");
+        var texture2 = textureLoader.load("img/tama.png");
         const material2 = new THREE.SpriteMaterial({ map: texture2,});
         const sprite2 = new THREE.Sprite(material2);
         sprite2.scale.set(1,1,1);
