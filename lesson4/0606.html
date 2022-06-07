@@ -70,11 +70,11 @@
         // scene.add(sprite2);
 
         //玉
-        const tama = generate("img/tama.png", 0,0,-1.5);
+        const tama = generate("img/tama.png", 0,0,-1.5,0,0,0);
         scene.add(tama);
 
         // 井をスプライトで作成
-        const ido = generate("img/i.png", 0,0,1.5);
+        const ido = generate("img/i.png", 0,0,1.5,0,Math.PI,0);
         scene.add(ido);
         // var texture3 = textureLoader.load("img/i.png");
         // const material3 = new THREE.SpriteMaterial({ map: texture3,});
@@ -92,7 +92,7 @@
           requestAnimationFrame(update);
         }
       }
-      function generate(path,x,y,z) {
+      function generate(path,x,y,z,x2,y2,z2) {
         // 板ポリ右を作成
         var textureLoader = new THREE.TextureLoader(); 
         var texture = textureLoader.load(path);
@@ -101,6 +101,7 @@
         var geometry = new THREE.PlaneGeometry(1, 1);
         var kanzi = new THREE.Mesh(geometry, mat);
         kanzi.position.set(x,y,z); //位置を指定
+        kanzi.rotation.set(x2,y2,z2);
         return kanzi;
       }
     </script>

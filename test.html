@@ -32,17 +32,16 @@
         // カメラコントローラーを作成
         const controls = new THREE.OrbitControls(camera, document.body); 
         
-        //光源
-        var directionalLight1 = new THREE.DirectionalLight(0x888888);
-        directionalLight1.position.set(-10, -1, 5);
-        directionalLight1.castShadow = true;
+        // 平行光源1
+        var directionalLight1 = new THREE.DirectionalLight(0xffffff);
+        directionalLight1.position.set(100, 100, 100);
+        // シーンに追加
         scene.add(directionalLight1);
-        // 平行光源(色、強さ）主光源
-        var directionalLightM = new THREE.DirectionalLight(0xffffff,1.0);
-        directionalLightM.position.set(0, 10, 5);
-        directionalLightM.castShadow = true; 
-        //シーンに追加
-        scene.add(directionalLightM);
+        // 平行光源2
+        var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+        directionalLight2.position.set(-100, 100, 100);
+        // シーンに追加
+        scene.add(directionalLight2);
 
         // helper
         const gridHelper = new THREE.GridHelper(2,10,3); // size, step
@@ -53,6 +52,9 @@
 
         var box = generate(0,0,1);
         scene.add(box);   // シーンに追加
+
+        var plane = generate_plane(2,0,0,0,0,0);
+        scene.add(plane);
 
         
         update();
@@ -71,6 +73,14 @@
         var box = new THREE.Mesh(boxGeometry, boxMaterial);
         box.position.set(x,y,z); //位置を指定
         return box;
+      }
+      function generate_plane(x,y,z,x2,y2,z2){
+        var planeGeometry = new THREE.PlaneGeometry(1,1);
+        var planeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: false});
+        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.position.set(x,y,z); //位置を指定
+        plane.rotation.set(x2,y2,z2)
+        return plane;
       }
     </script>
 </body>
