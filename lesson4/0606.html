@@ -95,12 +95,13 @@
       function generate(path,x,y,z) {
         // 板ポリ右を作成
         var textureLoader = new THREE.TextureLoader(); 
-        var texture = textureLoader.load("path");
+        var texture = textureLoader.load(path);
         var mat = new THREE.MeshLambertMaterial({transparent: true});
         mat.map = texture;
         var geometry = new THREE.PlaneGeometry(1, 1);
         var kanzi = new THREE.Mesh(geometry, mat);
         kanzi.position.set(x,y,z); //位置を指定
+        return kanzi;
       }
     </script>
   </body>

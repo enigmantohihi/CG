@@ -1,0 +1,77 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+ <script>
+      // ページの読み込みを待つ
+      window.addEventListener('DOMContentLoaded', init);
+
+      function init() {
+        // サイズを指定
+        const width = 800
+        const height = 600;
+
+        // レンダラーを作成
+        var renderer = new THREE.WebGLRenderer();
+        document.body.appendChild(renderer.domElement);
+        renderer.setSize(width, height);
+        // レンダラー：シャドウを有効にする
+        renderer.shadowMap.enabled = true;
+
+        // シーンを作成
+        const scene = new THREE.Scene();
+
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, width / height);
+        // カメラの初期座標を設定
+        camera.position.set(0, 0, 5);
+
+        // カメラコントローラーを作成
+        const controls = new THREE.OrbitControls(camera, document.body); 
+        
+        //光源
+        var directionalLight1 = new THREE.DirectionalLight(0x888888);
+        directionalLight1.position.set(-10, -1, 5);
+        directionalLight1.castShadow = true;
+        scene.add(directionalLight1);
+        // 平行光源(色、強さ）主光源
+        var directionalLightM = new THREE.DirectionalLight(0xffffff,1.0);
+        directionalLightM.position.set(0, 10, 5);
+        directionalLightM.castShadow = true; 
+        //シーンに追加
+        scene.add(directionalLightM);
+
+        // helper
+        const gridHelper = new THREE.GridHelper(2,10,3); // size, step
+        scene.add(gridHelper);
+        const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
+        scene.add(axisHelper);
+
+
+        var box = generate(0,0,1);
+        scene.add(box);   // シーンに追加
+
+        
+        update();
+        
+        // 毎フレーム時に実行されるループイベントです
+        function update() {
+          // レンダリング
+          renderer.render(scene, camera);
+          requestAnimationFrame(update);
+          
+        }
+      }
+      function generate(x,y,z){
+        var boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+        var boxMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe: false});
+        var box = new THREE.Mesh(boxGeometry, boxMaterial);
+        box.position.set(x,y,z); //位置を指定
+        return box;
+      }
+    </script>
+</body>
+</html>
