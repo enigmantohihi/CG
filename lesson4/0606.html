@@ -46,10 +46,10 @@
         scene.add(directionalLight2);
 
         // helper
-        const gridHelper = new THREE.GridHelper(2,10); // size, step
-        scene.add(gridHelper);
-        const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
-        scene.add(axisHelper);
+        // const gridHelper = new THREE.GridHelper(2,10); // size, step
+        // scene.add(gridHelper);
+        // const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
+        // scene.add(axisHelper);
 
         // 囗をスプライトで作成 
         var textureLoader = new THREE.TextureLoader(); 
@@ -84,8 +84,6 @@
         const dai = generate("img/dai.png", 0,-1.5,0,-Math.PI/2,0,0);
         scene.add(dai);
 
-
-        
         update();
 
         // 毎フレーム時に実行されるループイベントです
@@ -96,7 +94,6 @@
         }
       }
       function generate(path,x,y,z,x2,y2,z2) {
-        // 板ポリ右を作成
         var textureLoader = new THREE.TextureLoader(); 
         var texture = textureLoader.load(path);
         var mat = new THREE.MeshLambertMaterial({transparent: true});
