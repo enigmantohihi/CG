@@ -51,8 +51,8 @@
         const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
         scene.add(axisHelper);
 
-        var textureLoader = new THREE.TextureLoader(); 
         // 囗をスプライトで作成 
+        var textureLoader = new THREE.TextureLoader(); 
         var texture1 = textureLoader.load("img/kunigamae.png");
         const material1 = new THREE.SpriteMaterial({ map: texture1,});
         const sprite1 = new THREE.Sprite(material1);
@@ -61,20 +61,27 @@
         scene.add(sprite1);
 
         // 玉をスプライトで作成
-        var texture2 = textureLoader.load("img/tama.png");
-        const material2 = new THREE.SpriteMaterial({ map: texture2,});
-        const sprite2 = new THREE.Sprite(material2);
-        sprite2.scale.set(1,1,1);
-        sprite2.position.set(0,0,-1.5); //位置を指定
-        scene.add(sprite2);
+        // var textureLoader2 = new THREE.TextureLoader(); 
+        // var texture2 = textureLoader2.load("img/tama.png");
+        // const material2 = new THREE.SpriteMaterial({ map: texture2,});
+        // const sprite2 = new THREE.Sprite(material2);
+        // sprite2.scale.set(1,1,1);
+        // sprite2.position.set(0,0,-1.5); //位置を指定
+        // scene.add(sprite2);
 
-        // 玉をスプライトで作成
-        var texture3 = textureLoader.load("img/i.png");
-        const material3 = new THREE.SpriteMaterial({ map: texture3,});
-        const sprite3 = new THREE.Sprite(material3);
-        sprite3.scale.set(1,1,1);
-        sprite3.position.set(0,0,1.5); //位置を指定
-        scene.add(sprite3);
+        //玉
+        const tama = generate("img/tama.png", 0,0,-1.5);
+        scene.add(tama);
+
+        // 井をスプライトで作成
+        const ido = generate("img/i.png", 0,0,1.5);
+        scene.add(ido);
+        // var texture3 = textureLoader.load("img/i.png");
+        // const material3 = new THREE.SpriteMaterial({ map: texture3,});
+        // const sprite3 = new THREE.Sprite(material3);
+        // sprite3.scale.set(1,1,1);
+        // sprite3.position.set(0,0,1.5); //位置を指定
+        // scene.add(sprite3);
         
         update();
 
@@ -84,6 +91,16 @@
           renderer.render(scene, camera);
           requestAnimationFrame(update);
         }
+      }
+      function generate(path,x,y,z) {
+        // 板ポリ右を作成
+        var textureLoader = new THREE.TextureLoader(); 
+        var texture = textureLoader.load("path");
+        var mat = new THREE.MeshLambertMaterial({transparent: true});
+        mat.map = texture;
+        var geometry = new THREE.PlaneGeometry(1, 1);
+        var kanzi = new THREE.Mesh(geometry, mat);
+        kanzi.position.set(x,y,z); //位置を指定
       }
     </script>
   </body>
