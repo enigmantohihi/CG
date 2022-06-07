@@ -18,6 +18,7 @@
         var renderer = new THREE.WebGLRenderer();
         document.body.appendChild(renderer.domElement);
         renderer.setSize(width, height);
+        renderer.setClearColor(0xffffdd);
         // レンダラー：シャドウを有効にする
         renderer.shadowMap.enabled = true;
 
@@ -50,12 +51,17 @@
         scene.add(axisHelper);
 
 
-        var box = generate(0,0,1);
-        scene.add(box);   // シーンに追加
+        //var box = generate(0,0,1);
+        //scene.add(box);   // シーンに追加
 
-        var plane = generate_plane(2,0,0,0,0,0);
+        var plane = generate_plane(0,0,-1,0,0,0);
         scene.add(plane);
-
+        var plane1 = generate_plane(1,0,0,0,-Math.PI/2,0);
+        scene.add(plane1);
+        var plane2 = generate_plane(-1,0,0,0,Math.PI/2,0);
+        scene.add(plane2);
+        var plane3 = generate_plane(0,0,1,0,Math.PI,0);
+        scene.add(plane3);
         
         update();
         
