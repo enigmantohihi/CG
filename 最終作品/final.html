@@ -33,8 +33,9 @@
 
       // カメラを作成
       const camera = new THREE.PerspectiveCamera(45, width / height);
+      camera.fov = 90;
       // カメラの初期座標を設定
-      camera.position.set(0, 0, -5);
+      camera.position.set(0, 0, 10);
 
       // カメラコントローラーを作成
       const controls = new THREE.OrbitControls(camera, document.body); 
@@ -55,14 +56,13 @@
       // scene.add(gridHelper);
       // const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
       // scene.add(axisHelper);
+
       let txLoader  = new THREE.TextureLoader();
       let normalMap = txLoader.load("img/earth_tx.png");
-      let geometry = new THREE.SphereGeometry(1,16,16);
-      let material = new THREE.MeshPhongMaterial({
-        color:0xffffff,
-        map: normalMap
-      });
-      let earth = new THREE.Mesh(geometry, material);
+      let earthMaterial = new THREE.MeshPhongMaterial({color:0xffffff,map: normalMap});
+      //let earthMaterial = new THREE.MeshPhongMaterial({color:0x4169e1});
+      let earth = generateSphere(earthMaterial);
+      earth.position.set(-2,0,0);
 	    scene.add(earth);
 
       
@@ -71,6 +71,8 @@
 
       // 毎フレーム時に実行されるループイベントです
       function update() {
+        earth.rotation.y += 0.002;
+
         // レンダリング
         renderer.render(scene, camera);
         requestAnimationFrame(update);
@@ -86,6 +88,11 @@
       kanzi.position.set(x,y,z); //位置を指定
       kanzi.rotation.set(x2,y2,z2);
       return kanzi;
+    }
+    function generateSphere(material) {
+      let geometry = new THREE.SphereGeometry(1,64,64);
+      let sphere = new THREE.Mesh(geometry, material);
+      return sphere;
     }
   </script>
 </body>
