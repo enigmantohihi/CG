@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <title>最終</title>
+    <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+  <h1>最終</h1>
+  <p>
+    最終作品<br>
+  </p>
+  <script>
+    // ページの読み込みを待つ
+    window.addEventListener('DOMContentLoaded', init);
+
+    function init() {
+      // サイズを指定
+      const width = 800
+      const height = 600;
+
+      // レンダラーを作成
+      var renderer = new THREE.WebGLRenderer();
+      document.body.appendChild(renderer.domElement);
+      renderer.setSize(width, height);
+      // 背景の色を設定
+      renderer.setClearColor(0xffffdd);
+
+
+      // シーンを作成
+      const scene = new THREE.Scene();
+
+      // カメラを作成
+      const camera = new THREE.PerspectiveCamera(45, width / height);
+      // カメラの初期座標を設定
+      camera.position.set(0, 0, -5);
+
+      // カメラコントローラーを作成
+      const controls = new THREE.OrbitControls(camera, document.body); 
+      
+      // 平行光源1
+      var directionalLight1 = new THREE.DirectionalLight(0xffffff);
+      directionalLight1.position.set(10, 10, 10);
+      // シーンに追加
+      scene.add(directionalLight1);
+      // 平行光源2
+      var directionalLight2 = new THREE.DirectionalLight(0x888888);
+      directionalLight2.position.set(-10, -10, 10);
+      // シーンに追加
+      scene.add(directionalLight2);
+
+      // helper
+      // const gridHelper = new THREE.GridHelper(2,10); // size, step
+      // scene.add(gridHelper);
+      // const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
+      // scene.add(axisHelper);
+      let txLoader  = new THREE.TextureLoader();
+      let normalMap = txLoader.load("img/earth_tx.png");
+      let geometry = new THREE.SphereGeometry(1,16,16);
+      let material = new THREE.MeshPhongMaterial({
+        color:0xffffff,
+        map: normalMap
+      });
+      let earth = new THREE.Mesh(geometry, material);
+	    scene.add(earth);
+
+      
+
+      update();
+
+      // 毎フレーム時に実行されるループイベントです
+      function update() {
+        // レンダリング
+        renderer.render(scene, camera);
+        requestAnimationFrame(update);
+      }
+    }
+    function generate(path,x,y,z,x2,y2,z2) {
+      var textureLoader = new THREE.TextureLoader(); 
+      var texture = textureLoader.load(path);
+      var mat = new THREE.MeshLambertMaterial({transparent: true});
+      mat.map = texture;
+      var geometry = new THREE.PlaneGeometry(1, 1);
+      var kanzi = new THREE.Mesh(geometry, mat);
+      kanzi.position.set(x,y,z); //位置を指定
+      kanzi.rotation.set(x2,y2,z2);
+      return kanzi;
+    }
+  </script>
+</body>
+</html>

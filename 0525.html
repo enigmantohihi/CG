@@ -148,7 +148,7 @@
 
         //antenna
         var antenna_G = new THREE.SphereGeometry(0.26,8,8,0,Math.PI*2,0, 1.2);
-        var antenna_M = new THREE.MeshStandardMaterial({ color: 0xf5f5f5,  wireframe: false});
+        var antenna_M = new THREE.MeshPhongMaterial({ color: 0xf5f5f5, side:THREE.DoubleSide});
         var antenna = new THREE.Mesh(antenna_G, antenna_M);
         antenna.castShadow = true;
         antenna.position.set(0,-0.46,0);
