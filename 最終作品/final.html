@@ -5,6 +5,7 @@
     <title>最終</title>
     <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
     <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>
 </head>
 <body>
   <h1>最終</h1>
@@ -13,8 +14,7 @@
   </p>
   <script>
     // ページの読み込みを待つ
-    window.addEventListener('DOMContentLoaded', init);
-
+    window.addEventListener('DOMContentLoaded', init);  
     function init() {
       // サイズを指定
       const width = 800
@@ -25,74 +25,215 @@
       document.body.appendChild(renderer.domElement);
       renderer.setSize(width, height);
       // 背景の色を設定
-      renderer.setClearColor(0xffffdd);
-
+      renderer.setClearColor(0x000000);
 
       // シーンを作成
       const scene = new THREE.Scene();
 
       // カメラを作成
+      
       const camera = new THREE.PerspectiveCamera(45, width / height);
-      camera.fov = 90;
+      camera.fov = 10;
       // カメラの初期座標を設定
-      camera.position.set(0, 0, 10);
+      camera.position.set(0, 2, 5);
+      
 
       // カメラコントローラーを作成
       const controls = new THREE.OrbitControls(camera, document.body); 
       
-      // 平行光源1
-      var directionalLight1 = new THREE.DirectionalLight(0xffffff);
-      directionalLight1.position.set(5, 3, 5);
-      // シーンに追加
-      scene.add(directionalLight1);
-      // 平行光源2
-      var directionalLight2 = new THREE.DirectionalLight(0x888888);
-      directionalLight2.position.set(5, -3, 5);
-      // シーンに追加
-      scene.add(directionalLight2);
+
+      //light
+      const light = new THREE.PointLight(0xFFFFFF, 2, 50, 1.0);
+      //scene.add(light);
+
+      const light2 = new THREE.AmbientLight(0xFFFFFF, 0.5);
+      //scene.add(light2);
+
+      const light3 = new THREE.SpotLight(0xFFFFFF, 4, 30, Math.PI / 4, 10, 0.5);
+      light3.position.set(10,10,10);
+      //scene.add(light3);
+
+      const light4 = new THREE.DirectionalLight(0xFFFFFF, 0.4);
+      light4.position.set(0,2,0);
+      scene.add(light4);
+      const light5 = new THREE.DirectionalLight(0xFFFFFF, 0.4);
+      light5.position.set(0,-2,0);
+      scene.add(light5);
+      const light6 = new THREE.DirectionalLight(0xFFFFFF, 0.4);
+      light6.position.set(0,0,2);
+      scene.add(light6);
+      const light7 = new THREE.DirectionalLight(0xFFFFFF, 0.4);
+      light7.position.set(0,0,-2);
+      scene.add(light7);
 
       // helper
       // const gridHelper = new THREE.GridHelper(2,10); // size, step
       // scene.add(gridHelper);
       // const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
       // scene.add(axisHelper);
-
-      let txLoader  = new THREE.TextureLoader();
-      let normalMap = txLoader.load("img/earth_tx.png");
-      let earthMaterial = new THREE.MeshPhongMaterial({color:0xffffff,map: normalMap});
-      //let earthMaterial = new THREE.MeshPhongMaterial({color:0x4169e1});
-      let earth = generateSphere(earthMaterial);
-      earth.position.set(-2,0,0);
-	    scene.add(earth);
+      const backBoxG = new THREE.BoxGeometry( 20, 20, 20 );
+      const backBoxM = new THREE.MeshPhongMaterial( {color: 0x000000,side:THREE.DoubleSide} );
+      const backBox = new THREE.Mesh( backBoxG, backBoxM );
+      scene.add(backBox);
 
       
+
+      const PLANE = new THREE.Group();
+      const boxG = new THREE.BoxGeometry( 1, 1, 1 );
+      const boxM = new THREE.MeshBasicMaterial( {color: 0x000000, wireframe:true} );
+      const cube = new THREE.Mesh( boxG, boxM );
+      cube.position.y = 0.5;
+      PLANE.add( cube );
+      
+      const plane0 = generatePlane(0x4169e1);
+      PLANE.add(plane0);
+      plane0.rotation.x = Math.PI/2;
+
+      const shaft1 = new THREE.Group();
+      const plane1 = generatePlane(0xffd700);
+      shaft1.add(plane1);
+      PLANE.add(shaft1);
+      shaft1.position.set(-0.5,0,0);
+      plane1.position.set(-0.5,0,0);
+      shaft1.rotation.x = Math.PI/2;
+      shaft1.rotation.y = -Math.PI/2;
+
+      const shaft2 = new THREE.Group();
+      const plane2 = generatePlane(0xffd700);
+      shaft2.add(plane2);
+      PLANE.add(shaft2);
+      shaft2.position.set(0.5,0,0);
+      plane2.position.set(0.5,0,0);
+      shaft2.rotation.x = Math.PI/2;
+      shaft2.rotation.y = Math.PI/2;
+
+      const shaft3 = new THREE.Group();
+      const plane3 = generatePlane(0x228b22);
+      shaft3.add(plane3);
+      PLANE.add(shaft3);
+      shaft3.position.set(0,0,-0.5);
+      plane3.position.set(0,0,-0.5);
+      plane3.rotation.x = Math.PI/2;
+      shaft3.rotation.x = Math.PI/2;
+
+      const shaft4 = new THREE.Group();
+      const plane4 = generatePlane(0x228b22);
+      shaft4.add(plane4);
+      PLANE.add(shaft4);
+      shaft4.position.set(0,0,0.5);
+      plane4.position.set(0,0,0.5);
+      plane4.rotation.x = Math.PI/2;
+      shaft4.rotation.x = -Math.PI/2;
+
+      const shaft5 = new THREE.Group();
+      const plane5 = generatePlane(0x4169e1);
+      shaft5.add(plane5);
+      PLANE.add(shaft5);
+      shaft1.add(shaft5);
+      shaft5.position.set(-1,0,0);
+      plane5.position.set(-0.5,0,0);
+      shaft5.rotation.y = -Math.PI/2;
+
+      PLANE.position.set(0,-0.5,0);
+      scene.add(PLANE);
+
+      var flags = [];
+      for(let i=0;i<4;i++){
+        const a = new Boolean(false);
+        flags.push(a);
+      }
+
+      let count = 0;
 
       update();
 
       // 毎フレーム時に実行されるループイベントです
-      function update() {
-        earth.rotation.y += 0.002;
 
+      /*
+      1 開ける
+      2 完全に開いたらフラグをオフにする
+      3 全部がオフになったら閉じる
+      4 完全に閉じたらフラグをオンにする
+      5 全部がオンになったら1に戻る
+      */
+     
+
+      function update() {
+        if(count<1){
+          if(flags[0]){
+            shaft2.rotation.y -= 0.01;
+            if(shaft2.rotation.y<0) flags[0] = false;
+          } else {
+            shaft2.rotation.y += 0.01;
+            if(shaft2.rotation.y>(Math.PI/2)) flags[0] = true;
+          }
+
+          if(flags[1]){
+            shaft3.rotation.x -= 0.01;
+            if(shaft3.rotation.x<0) flags[1] = false;
+          } else {
+            shaft3.rotation.x += 0.01;
+            if(shaft3.rotation.x>(Math.PI/2)) flags[1] = true;
+          }
+
+          if(flags[2]){
+            shaft4.rotation.x += 0.01;
+            if(shaft4.rotation.x>0) flags[2] = false;
+          } else {
+            shaft4.rotation.x -= 0.01;
+            if(shaft4.rotation.x<-(Math.PI/2)) flags[2] = true;
+          }
+
+          if(flags[3]){
+            shaft1.rotation.y += 0.01;
+            shaft5.rotation.y += 0.01;
+            if(shaft1.rotation.y>0) flags[3] = false;
+          } else {
+            shaft1.rotation.y -= 0.01;
+            shaft5.rotation.y -= 0.01;
+            if(shaft1.rotation.y<-(Math.PI/2)) {
+              flags[3] = true;
+              count++;
+            }
+          }
+        } else if(count <2){
+          plane0.rotation.z += 0.02;
+          plane1.rotation.z += 0.02;
+          plane2.rotation.z += 0.02;
+          plane3.rotation.z += 0.02;
+          plane4.rotation.z += 0.02;
+          plane5.rotation.z += 0.02;
+          if(plane0.rotation.z >= Math.PI) count++;
+        } else if(count <3){
+          plane0.rotation.z -= 0.02;
+          plane1.rotation.z -= 0.02;
+          plane2.rotation.z -= 0.02;
+          plane3.rotation.z -= 0.02;
+          plane4.rotation.z -= 0.02;
+          plane5.rotation.z -= 0.02;
+          if(plane0.rotation.z <= 0) count = 0;
+        }
+
+        
+
+        
+        PLANE.rotation.y += 0.01;
+        
         // レンダリング
         renderer.render(scene, camera);
         requestAnimationFrame(update);
+
+        
       }
     }
-    function generate(path,x,y,z,x2,y2,z2) {
-      var textureLoader = new THREE.TextureLoader(); 
-      var texture = textureLoader.load(path);
-      var mat = new THREE.MeshLambertMaterial({transparent: true});
-      mat.map = texture;
-      var geometry = new THREE.PlaneGeometry(1, 1);
-      var kanzi = new THREE.Mesh(geometry, mat);
-      kanzi.position.set(x,y,z); //位置を指定
-      kanzi.rotation.set(x2,y2,z2);
-      return kanzi;
+    function generateBox() {
+      
     }
-    function generateSphere(material) {
-      let geometry = new THREE.SphereGeometry(1,64,64);
-      let sphere = new THREE.Mesh(geometry, material);
-      return sphere;
+    function generatePlane(color) {
+      const geometry = new THREE.PlaneGeometry(1,1);
+      const material = new THREE.MeshPhongMaterial({color:color,side:THREE.DoubleSide});
+      const plane = new THREE.Mesh(geometry,material);
+      return plane;
     }
   </script>
 </body>
